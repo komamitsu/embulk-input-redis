@@ -2,6 +2,7 @@ module Embulk
 
   class OutputRedis < OutputPlugin
     require 'redis'
+    require 'json'
 
     Plugin.register_output('redis', self)
 
@@ -11,6 +12,8 @@ module Embulk
         'port' => config.param('port', :int, :default => 6379),
         'db' => config.param('db', :int, :default => 0),
         'key' => config.param('key', :string),
+        'key_prefix' => config.param('key_prefix', :string, :default => ''),
+        'encode' => config.param('encode', :string, :default => 'json'),
       }
 
       puts "Redis output started."
@@ -33,8 +36,11 @@ module Embulk
     def add(page)
       page.each do |record|
         hash = Hash[schema.names.zip(record)]
-        puts "#{@message}: #{hash.to_json}"
-        @redis.set(hash[task['key']], hash)
+          case task['encode']
+          when 'json'
+            v = hash.to_json
+            @redis.set("#{task['key_prefix']}#{hash[task['key']]}", v)
+          end
         @records += 1 
       end
     end
