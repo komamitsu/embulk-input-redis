@@ -26,14 +26,14 @@ module Embulk
       return {}
     end
 
-    def self.run(task, schema, index, page_builder)
-      puts "Redis input thread #{index}..."
+    def run
+      puts "Redis input thread #{@index}..."
 
-      r = ::Redis.new(:host => task['host'], :port => task['port'], :db => task['db'])
-      r.keys("#{task['key_prefix']}*").each do |k|
-        page_builder.add([k, r.get(k)])
+      r = ::Redis.new(:host => @task['host'], :port => @task['port'], :db => @task['db'])
+      r.keys("#{@task['key_prefix']}*").each do |k|
+        @page_builder.add([k, r.get(k)])
       end
-      page_builder.finish  # don't forget to call finish :-)
+      @page_builder.finish  # don't forget to call finish :-)
 
       commit_report = {
       }
