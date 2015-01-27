@@ -9,12 +9,12 @@ module Embulk
     def self.transaction(config, &control)
       task = {
         'host' => config.param('host', :string, :default => 'localhost'),
-        'port' => config.param('port', :int, :default => 6379),
-        'db' => config.param('db', :int, :default => 0),
+        'port' => config.param('port', :integer, :default => 6379),
+        'db' => config.param('db', :integer, :default => 0),
         'key_prefix' => config.param('key_prefix', :string, :default => ''),
         'encode' => config.param('encode', :string, :default => 'json'),
       }
-      threads = config.param('threads', :int, default: 1)
+      threads = config.param('threads', :integer, default: 1)
 
       columns = [
         Column.new(0, 'key', :string),
