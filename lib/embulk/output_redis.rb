@@ -9,8 +9,8 @@ module Embulk
     def self.transaction(config, schema, processor_count, &control)
       task = {
         'host' => config.param('host', :string, :default => 'localhost'),
-        'port' => config.param('port', :int, :default => 6379),
-        'db' => config.param('db', :int, :default => 0),
+        'port' => config.param('port', :integer, :default => 6379),
+        'db' => config.param('db', :integer, :default => 0),
         'key' => config.param('key', :string),
         'key_prefix' => config.param('key_prefix', :string, :default => ''),
         'encode' => config.param('encode', :string, :default => 'json'),
@@ -41,7 +41,7 @@ module Embulk
             v = hash.to_json
             @redis.set("#{task['key_prefix']}#{hash[task['key']]}", v)
           end
-        @records += 1 
+        @records += 1
       end
     end
 
