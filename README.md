@@ -9,7 +9,7 @@ This plugin runs without transaction for now.
 - **host** host name of the Redis server (string, default: "localhost")
 - **port** port of the Redis server (integer, default: 6379)
 - **db** destination database number (integer, default: 0)
-- **key_prefix** key prefix to search keys for input plugin (string)
+- **key_prefix** key prefix to search keys for input/output plugin (string)
 - **key** key name for output plugin (string, required)
 
 ### Example
@@ -21,6 +21,8 @@ out:
   port: 6379
   db: 0
   key: user_name
+  key_prefix: user_
+
 
 in:
   type: redis
