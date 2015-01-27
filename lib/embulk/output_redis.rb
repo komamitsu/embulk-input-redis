@@ -3,6 +3,7 @@ module Embulk
   class OutputRedis < OutputPlugin
     require 'redis'
     require 'json'
+    require 'set'
 
     Plugin.register_output('redis', self)
 
@@ -26,7 +27,8 @@ module Embulk
     def initialize(task, schema, index)
       puts "Example output thread #{index}..."
       super
-      @records = 0
+      @rows = 0
+      @unique_keys = ::Set.new
       @redis = ::Redis.new(:host => task['host'], :port => task['port'], :db => task['db'])
     end
 
@@ -36,12 +38,18 @@ module Embulk
     def add(page)
       page.each do |record|
         hash = Hash[schema.names.zip(record)]
+        k = "#{task['key_prefix']}#{hash[task['key']]}"
+        unless @unique_keys.include? k
           case task['encode']
           when 'json'
             v = hash.to_json
-            @redis.set("#{task['key_prefix']}#{hash[task['key']]}", v)
+            @redis.set(k, v)
           end
-        @records += 1
+          @unique_keys << k
+        else
+          puts "Warning: #{k} is already exists"
+        end
+        @rows += 1  # inrement anyway
       end
     end
 
@@ -53,7 +61,8 @@ module Embulk
 
     def commit
       commit_report = {
-        "records" => @records
+        "rows" => @rows,
+        "unique_keys" => @unique_keys.size
       }
       return commit_report
     end
