@@ -13,23 +13,13 @@ module Embulk
         'db' => config.param('db', :int, :default => 0),
         'key_prefix' => config.param('key_prefix', :string, :default => ''),
         'encode' => config.param('encode', :string, :default => 'json'),
-        'columns' => config.param('columns', :hash, :default => nil),
       }
       threads = config.param('threads', :int, default: 1)
 
-      columns =
-        if cs = task['columns']
-          xs = []
-          cs.each_with_index do |c, i|
-            xs << Column.new(i, c[0], c[1])
-          end
-          xs
-        else
-          [
-            Column.new(0, 'key', :string),
-            Column.new(1, 'value', :string),
-          ]
-        end
+      columns = [
+        Column.new(0, 'key', :string),
+        Column.new(1, 'value', :string),
+      ]
 
       puts "Redis input started."
       commit_reports = yield(task, columns, threads)
@@ -44,16 +34,10 @@ module Embulk
       r = ::Redis.new(:host => task['host'], :port => task['port'], :db => task['db'])
       r.keys("#{task['key_prefix']}*").each do |k|
         # TODO: Use MGET or something
-        v = r.get(k)
         case task['encode']
         when 'json'
-          if task['columns']
-            hash = JSON.parse(v)
-            xs = [k] + hash.values
-            page_builder.add([k, xs])
-          else
-            page_builder.add([k, v])
-          end
+          v = r.get(k)
+          page_builder.add([k, v])
         end
       end
       page_builder.finish  # don't forget to call finish :-)
