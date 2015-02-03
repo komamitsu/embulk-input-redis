@@ -44,6 +44,8 @@ module Embulk
           when 'json'
             v = hash.to_json
             @redis.set(k, v)
+          when 'hash'
+            @redis.hmset(k, hash.to_a.flatten)
           end
           @unique_keys << k
         else
