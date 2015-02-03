@@ -11,8 +11,8 @@ This plugin runs without transaction for now.
 - **db** Database number (integer, default: 0)
 - **key_prefix** Key prefix for input/output plugin (string)
 - **encode** Encoding in Redis
--- json: Stored as a JSON string. GET/SET commands can access it (string)
--- hash: Stored as a Hash. H* commands such as HMGET/HMSET can access it (string, output only)
+ - json: Stored as a JSON string. GET/SET commands can access it (string)
+ - hash: Stored as a Hash. H* commands such as HMGET/HMSET can access it (string, output only)
 - **key** Column name used for a key in Redis (string, required: output only)
 
 ### Example
