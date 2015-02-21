@@ -19,11 +19,11 @@
 - **columns**: Hash records that has the following two fields (array, default:[])
  - name: Name of the column
  - type: Column types as follows
-  - boolean
-  - long
-  - double
-  - string
-  - timestamp
+    - boolean
+    - long
+    - double
+    - string
+    - timestamp
 
 ### Example
 
