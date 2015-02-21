@@ -1,9 +1,9 @@
 
 Gem::Specification.new do |gem|
   gem.name          = "embulk-plugin-redis"
-  gem.version       = "0.1.3"
+  gem.version       = "0.1.4"
 
-  gem.summary       = %q{Embulk plugin for Redis}
+  gem.summary       = %q{Embulk input/output plugins for Redis}
   gem.description   = gem.summary
   gem.authors       = ["Mitsunori Komatsu"]
   gem.email         = ["komamitsu@gmail.com"]
