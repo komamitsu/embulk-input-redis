@@ -6,6 +6,9 @@ module Embulk
 
     Plugin.register_input('redis', self)
 
+    def self.guess
+    end
+
     def self.transaction(config, &control)
       task = {
         'host' => config.param('host', :string, :default => 'localhost'),
