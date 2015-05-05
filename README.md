@@ -71,9 +71,3 @@ out:
   type: redis
   host: localhost
   port: 6379
-  db: 0
-  key: id
-  key_prefix: user_
-  encode: json
-```
-
